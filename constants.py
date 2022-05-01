@@ -86,6 +86,9 @@ SELECT DISTINCT animals.outcome_type
 FROM animals;
 
 """
+# Глеб ответил что многие ко многим тут не надо делать...
+# https://skypro.slack.com/archives/C03C403TGMV/p1651151761217739?thread_ts=1651149036.018519&cid=C03C403TGMV
+# Хотя возможно и стоило бы?
 
 MIGRATE_JOIN = f"""
 
@@ -105,4 +108,33 @@ LEFT JOIN color2 ON color2.color2 = animals.color2
 LEFT JOIN outcome_subtypes ON outcome_subtypes.outcome_subtype = animals.outcome_subtype
 LEFT JOIN outcome_types ON outcome_types.outcome_type = animals.outcome_type
 
+"""
+# Хотел сделать так для красивого поиска, но результаты не отображаются(((( - пустой список. Не знаю что не так(
+GOOD_SEARCH = f"""
+
+SELECT 
+animals_new.id,
+animals_new.age_upon_outcome,
+animals_new.animal_id,
+animals_new.name,
+types."type",
+breeds.breed,
+color1.color1,
+color2.color2,
+animals_new.date_of_birth,
+outcome_types.outcome_type,
+outcome_subtypes.outcome_subtype,
+animals_new.outcome_month,
+animals_new.outcome_year
+
+FROM animals_new
+
+INNER JOIN types ON animals_new.id_type = types.id_type
+INNER JOIN breeds ON animals_new.id_breed  = breeds.id_breed
+INNER JOIN color1 ON animals_new.id_color1  = color1.id_color
+INNER JOIN color2 ON animals_new.id_color2  = color2.id_color
+INNER JOIN outcome_types ON animals_new.id_outcome_type  = outcome_types.id_outcome_type 
+INNER JOIN outcome_subtypes ON animals_new.id_outcome_subtype  =  outcome_subtypes.id_outcome_subtype
+
+WHERE id == {id}
 """
